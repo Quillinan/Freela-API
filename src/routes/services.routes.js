@@ -7,7 +7,7 @@ import { serviceSchema } from "../schemas/services.schema.js";
 const servicesRouter = Router();
 
 servicesRouter.post(
-  "/add",
+  "/",
   validateToken(),
   validateSchema(serviceSchema),
   servicesController.addService
