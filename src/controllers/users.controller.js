@@ -15,14 +15,14 @@ export const usersController = {
         return res.status(409).json({ error: "Usuário já existe." });
       }
 
-      const { name, password } = req.body;
+      const { name, city, phone, password } = req.body;
 
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       const insertQuery =
-        "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *";
-      const values = [name, email, hashedPassword];
+        "INSERT INTO users (name, city, phone, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *";
+      const values = [name, city, phone, email, hashedPassword];
       await connection.query(insertQuery, values);
 
       res.status(201).json({ message: "Usuário criado com sucesso!" });
