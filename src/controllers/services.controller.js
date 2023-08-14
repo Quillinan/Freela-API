@@ -46,12 +46,13 @@ export const servicesController = {
     try {
       const query = `
         SELECT * FROM services
+        WHERE active = true
       `;
       const result = await connection.query(query);
 
-      const allServices = result.rows;
+      const activeServices = result.rows;
 
-      res.status(200).json(allServices);
+      res.status(200).json(activeServices);
     } catch (err) {
       res.status(500).json({
         error: "Erro ao obter serviços.",
@@ -59,17 +60,30 @@ export const servicesController = {
       });
     }
   },
+
   getOneService: async (req, res) => {
     try {
       const serviceId = req.params.serviceId;
 
       const query = `
-        SELECT * FROM services
-        WHERE id = $1
+        SELECT 
+          services.*,
+          users.name AS "ownerName",
+          users.email AS "ownerEmail",
+          users.phone AS "ownerPhone",
+          users.city AS "ownerCity"
+        FROM services
+        JOIN users ON services."idUser" = users.id
+        WHERE services.id = $1
       `;
+
       const result = await connection.query(query, [serviceId]);
 
       const service = result.rows[0];
+
+      if (!service) {
+        return res.status(404).json({ error: "Serviço não encontrado" });
+      }
 
       res.status(200).json(service);
     } catch (err) {
@@ -79,6 +93,7 @@ export const servicesController = {
       });
     }
   },
+
   activateService: async (req, res) => {
     try {
       const serviceId = req.params.serviceId;
