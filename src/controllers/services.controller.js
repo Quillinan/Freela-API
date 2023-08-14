@@ -24,7 +24,7 @@ export const servicesController = {
   },
   getUserServices: async (req, res) => {
     try {
-      const userId = req.params.userId;
+      const userId = req.user.id;
 
       const query = `
         SELECT * FROM services
@@ -106,7 +106,6 @@ export const servicesController = {
       const result = await connection.query(query, [serviceId]);
 
       const service = result.rows[0];
-      console.log(service);
 
       if (service.idUser !== userId) {
         return res.status(401).json({ error: "Usuário inválido" });

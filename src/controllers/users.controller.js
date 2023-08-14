@@ -63,4 +63,23 @@ export const usersController = {
         .json({ error: "Erro ao fazer login.", details: err.message });
     }
   },
+  logout: async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const updateQuery = `
+        UPDATE users
+        SET token = NULL
+        WHERE id = $1
+      `;
+      await connection.query(updateQuery, [userId]);
+
+      res.status(200).json({ message: "Logout realizado com sucesso!" });
+    } catch (err) {
+      res.status(500).json({
+        error: "Erro ao realizar o logout.",
+        details: err.message,
+      });
+    }
+  },
 };

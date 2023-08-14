@@ -13,7 +13,7 @@ servicesRouter.post(
   servicesController.addService
 );
 servicesRouter.get(
-  "/user:userId",
+  "/user",
   validateToken(),
   servicesController.getUserServices
 );
